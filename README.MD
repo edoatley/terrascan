@@ -192,9 +192,23 @@ repos:
 This gave me the output I wanted but to make it run automatically we also need to run this command:
 
 ```bash
-pre-commit install
+$ pre-commit install
+pre-commit installed at .git/hooks/pre-commit
 ```
 
+Now if we have staged terraform files they should be scanned. To test this I added whitespace to `main.tf` and staged the tried to commit which gave the terrascan output listing the issues. We can see by
+checking the git status that we are 1 commit ahead of the remote and main.tf remains staged:
+
+```bash
+git status
+On branch action
+Your branch is ahead of 'origin/action' by 1 commit.
+  (use "git push" to publish your local commits)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   terraform/main.tf
+```
 
 Setting up a pre-commit hook as above is a good way to give developers fast feedback to ensure good practices.
 

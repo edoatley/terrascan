@@ -1,3 +1,4 @@
+name: Terraform Static Analysis
 on: 
   push:
     branches-ignore: 
@@ -14,7 +15,7 @@ jobs:
 
     - name: Run Terrascan
       id: terrascan
-      uses: tenable/terrascan-action@main
+      uses: tenable/terrascan-action@v1.5.0
       with:
         iac_type: 'terraform'
         iac_version: 'v14'
@@ -23,6 +24,6 @@ jobs:
         sarif_upload: true
         
     - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v1
+      uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: terrascan.sarif
