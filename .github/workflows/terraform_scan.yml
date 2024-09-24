@@ -4,6 +4,8 @@ on:
     branches-ignore: 
       - main
 
+
+
 jobs:
   terrascan:
     runs-on: ubuntu-latest
@@ -23,6 +25,10 @@ jobs:
         only_warn: true
         sarif_upload: true
         
+    - name: Check for file
+      shell: bash
+      run: cat terrascan.sarif
+
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v3
       with:

@@ -217,6 +217,7 @@ Setting up a pre-commit hook as above is a good way to give developers fast feed
 To ensure all pushes to the repo are scanned regardless of the commit origin it is good practice to integrate the scan to the CI process. In this case I am using GitHub Actions:
 
 ```yaml
+name: Terraform Static Analysis
 on: 
   push:
     branches-ignore: 
@@ -239,12 +240,6 @@ jobs:
         iac_version: 'v14'
         policy_type: 'aws'
         only_warn: true
-        sarif_upload: true
-        
-    - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v1
-      with:
-        sarif_file: terrascan.sarif
 ```
 
 When this runs we see the following output:
