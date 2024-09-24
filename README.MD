@@ -1,4 +1,4 @@
-# Terrascan
+# Static Analysis of terraform code with terrascan
 
 ## Introduction
 
@@ -288,4 +288,4 @@ and the security events are closed corectly leaving these:
 From my experience writing this articl **terrascan** appears to be a useful way to apply static analysis to your terraform Infrastructure-as-Code. While not a
 silver bullet to perfect code it can help identify issues or even just remind you of things you forget. It can also help you quickly review changes to ensure they are not breaking things.
 
-The code in this article can all be found in the [edoatley/terrascan](https://github.com/edoatley/terrascan).
+The final code I created during writing this article can all be found in the [edoatley/terrascan](https://github.com/edoatley/terrascan).
