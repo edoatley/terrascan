@@ -1,5 +1,11 @@
 resource "aws_vpc" "main" {
-  cidr_block = var.vpc_cidr_block
+  cidr_block           = var.vpc_cidr_block
+  instance_tenancy     = "default"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  tags = {
+    Name = "CustomVpc"
+  }
 }
 
 resource "aws_subnet" "subnets" {
@@ -7,6 +13,9 @@ resource "aws_subnet" "subnets" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = each.value.cidr_block
   availability_zone = each.value.availability_zone
+  tags = {
+    Name = each.key
+  }
 }
 
 resource "aws_internet_gateway" "igw" {
@@ -20,6 +29,7 @@ resource "aws_route_table" "rt" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
   }
+
 }
 
 resource "aws_route_table_association" "a" {
@@ -56,11 +66,18 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
+
 resource "aws_instance" "this" {
-  ami             = data.aws_ami.amazon_linux.id
-  instance_type   = "t2.micro"
-  subnet_id       = aws_subnet.subnets["subnet1"].id
-  security_groups = [aws_security_group.sg.name]
+  ami           = data.aws_ami.amazon_linux.id
+  instance_type = "t2.micro"
+  private_ip    = var.ec2_private_ip
+  subnet_id     = aws_subnet.subnets["subnet1"].id
+
+  metadata_options {
+    http_tokens = "required" # fix imdsv2
+  }
+
+  monitoring = true # fix detailed monitoring
 
   tags = {
     Name = "TestInstance"

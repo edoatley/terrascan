@@ -2,3 +2,5 @@
 .terraform
 .terraform.lock.hcl
 .envrc
+terraform.tfstate*
+tfplan
