@@ -27,6 +27,7 @@ jobs:
         policy_type: 'aws'
         only_warn: true
         sarif_upload: true
+        iac_dir: terraform
         
     - name: Check for file
       shell: bash
