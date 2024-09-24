@@ -1,0 +1,12 @@
+repos:
+  # - repo: https://github.com/tenable/terrascan
+  #   rev: v1.19.1
+  #   hooks:
+  #     - id: terraform-pre-commit
+  - repo:  https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.96.1
+    hooks:
+      - id: terrascan
+        args:
+          - --args=--iac-dir=terraform
+          - --args=--policy-type=aws
