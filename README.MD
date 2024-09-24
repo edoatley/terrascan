@@ -4,7 +4,7 @@
 
 Terraform code defines how your infrastructure will be created and as such has immense power to make it very secure or very insecure! 
 I write quite a lot of terraform but nevertheless it is hard to remember everything you need to set to get the perfect deployment 
-of every resource. Static analysis is a powerful tool to scan terraform code for common issues or potentially dangerous/insecure 
+of every resource. [Static analysis](https://en.wikipedia.org/wiki/Static_program_analysis) is a powerful tool to scan terraform code for common issues or potentially dangerous/insecure 
 settings we want to prohibit or at least review. It is a powerful way to catch mistakes early and enforce standards. 
 
 Here I take a quick look at using [terrascan](https://github.com/tenable/terrascan) to achieve to perform static analysis 
@@ -185,7 +185,6 @@ repos:
     hooks:
       - id: terrascan
         args:
-          - --args=--iac-dir=terraform
           - --args=--policy-type=aws
 ```
 
@@ -267,3 +266,26 @@ I wanted to see what happens if I fix some of the issues and so I fixed a couple
 - adding detailed monitoring on the EC2 instance
 - fixed the metadata service so it uses IMDSv2
 
+Of course that does not work as I have not fixed all the defects but for now we can workaround that by skipping the pre-commit hook so we can see the updates in our GitHub Actions:
+
+```bash
+git add .
+SKIP=terrascan git commit -m "Fix some defects"
+git push
+```
+
+This then improves the report to the following:
+
+![Github-Actions-After-Some-Fixes](images/Github-Actions-After-Some-Fixes.png)
+
+and the security events are closed corectly leaving these:
+
+![Security-Alerts-After-Some-Fixes](images/Security-Alerts-After-Some-Fixes.png)
+
+
+## Conclusion
+
+From my experience writing this articl **terrascan** appears to be a useful way to apply static analysis to your terraform Infrastructure-as-Code. While not a
+silver bullet to perfect code it can help identify issues or even just remind you of things you forget. It can also help you quickly review changes to ensure they are not breaking things.
+
+The code in this article can all be found in the [edoatley/terrascan](https://github.com/edoatley/terrascan).
