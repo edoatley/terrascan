@@ -227,3 +227,5 @@ jobs:
       with:
         sarif_file: terrascan.sarif
 ```
+
+When this runs we see the following output:
