@@ -8,5 +8,5 @@ repos:
     hooks:
       - id: terrascan
         args:
-          - --args=--iac-dir=terraform
+          # - --args=--iac-dir=terraform
           - --args=--policy-type=aws

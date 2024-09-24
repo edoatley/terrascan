@@ -220,8 +220,12 @@ To ensure all pushes to the repo are scanned regardless of the commit origin it 
 name: Terraform Static Analysis
 on: 
   push:
-    branches-ignore: 
-      - main
+
+# to upload security events we must set the permissions
+permissions:
+  actions: read
+  contents: read
+  security-events: write
 
 jobs:
   terrascan:
@@ -234,12 +238,32 @@ jobs:
 
     - name: Run Terrascan
       id: terrascan
-      uses: tenable/terrascan-action@main
+      uses: tenable/terrascan-action@v1.5.0
       with:
         iac_type: 'terraform'
         iac_version: 'v14'
         policy_type: 'aws'
         only_warn: true
+        sarif_upload: true
+        iac_dir: terraform
+
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: terrascan.sarif
 ```
 
-When this runs we see the following output:
+When this action runs we see the following output:
+
+![Github Actions Output](images/Github-Actions-Output.png)
+
+and if we give some time and navigate on the GitHub UI to **Security** > **Code Scanning** and change the branch to match the one you are using, we can see something like this:
+
+![Security-Alerts](images/Security-Alerts.png)
+
+## Time for some fixes
+
+I wanted to see what happens if I fix some of the issues and so I fixed a couple by:
+- adding detailed monitoring on the EC2 instance
+- fixed the metadata service so it uses IMDSv2
+
