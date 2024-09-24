@@ -4,7 +4,10 @@ on:
     branches-ignore: 
       - main
 
-
+permissions:
+  actions: read
+  contents: read
+  security-events: write
 
 jobs:
   terrascan:
