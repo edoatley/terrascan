@@ -189,7 +189,12 @@ repos:
           - --args=--policy-type=aws
 ```
 
-This gave me the output I wanted.
+This gave me the output I wanted but to make it run automatically we also need to run this command:
+
+```bash
+pre-commit install
+```
+
 
 Setting up a pre-commit hook as above is a good way to give developers fast feedback to ensure good practices.
 
