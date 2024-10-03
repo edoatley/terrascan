@@ -1,5 +1,19 @@
 # Static Analysis of terraform code with terrascan
 
+- [Static Analysis of terraform code with terrascan](#static-analysis-of-terraform-code-with-terrascan)
+  - [Introduction](#introduction)
+  - [Setup](#setup)
+    - [1. Install terrascan](#1-install-terrascan)
+    - [2. Create some terraform code to scan](#2-create-some-terraform-code-to-scan)
+    - [3. Validate setup](#3-validate-setup)
+  - [Invoke Terrascan](#invoke-terrascan)
+    - [Local adhoc execution](#local-adhoc-execution)
+    - [Automatically invoke with a pre-commit hook](#automatically-invoke-with-a-pre-commit-hook)
+    - [Scan with GitHub Actions](#scan-with-github-actions)
+  - [Time for some fixes](#time-for-some-fixes)
+  - [Conclusion](#conclusion)
+
+
 ## Introduction
 
 Terraform code defines how your infrastructure will be created and as such has immense power to make it very secure or very insecure! 
@@ -28,7 +42,13 @@ Next I will write some terraform create a simple VNet with 3 subnets, an Interne
 
 ```hcl
 resource "aws_vpc" "main" {
-  cidr_block = var.vpc_cidr_block
+  cidr_block           = var.vpc_cidr_block
+  instance_tenancy     = "default"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  tags = {
+    Name = "CustomVpc"
+  }
 }
 
 resource "aws_subnet" "subnets" {

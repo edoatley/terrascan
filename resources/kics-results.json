@@ -1,0 +1,390 @@
+{
+	"kics_version": "v2.1.3",
+	"files_scanned": 4,
+	"lines_scanned": 135,
+	"files_parsed": 4,
+	"lines_parsed": 135,
+	"lines_ignored": 0,
+	"files_failed_to_scan": 0,
+	"queries_total": 1088,
+	"queries_failed_to_execute": 0,
+	"queries_failed_to_compute_similarity_id": 0,
+	"scan_id": "console",
+	"severity_counters": {
+		"CRITICAL": 0,
+		"HIGH": 0,
+		"INFO": 11,
+		"LOW": 2,
+		"MEDIUM": 3,
+		"TRACE": 0
+	},
+	"total_counter": 16,
+	"total_bom_resources": 0,
+	"start": "2024-10-03T12:44:47.723365411Z",
+	"end": "2024-10-03T12:45:00.272956814Z",
+	"paths": [
+		"/path"
+	],
+	"queries": [
+		{
+			"query_name": "EC2 Instance Has Public IP",
+			"query_id": "5a2486aa-facf-477d-a5c1-b010789459ce",
+			"query_url": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance#associate_public_ip_address",
+			"severity": "MEDIUM",
+			"platform": "Terraform",
+			"cwe": "200",
+			"cloud_provider": "AWS",
+			"category": "Networking and Firewall",
+			"experimental": false,
+			"description": "EC2 Instance should not have a public IP address.",
+			"description_id": "c6f1d1f4",
+			"files": [
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "064ed6446b050d87bb1c39c21e46e8648c01cda0ae20f42bba8c3c80a971f16b",
+					"line": 70,
+					"resource_type": "aws_instance",
+					"resource_name": "TestInstance",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_instance.this",
+					"search_line": 70,
+					"search_value": "",
+					"expected_value": "'associate_public_ip_address' should be defined and not null",
+					"actual_value": "'associate_public_ip_address' is undefined or null"
+				}
+			]
+		},
+		{
+			"query_name": "VPC FlowLogs Disabled",
+			"query_id": "f83121ea-03da-434f-9277-9cd247ab3047",
+			"query_url": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc",
+			"severity": "MEDIUM",
+			"platform": "Terraform",
+			"cwe": "778",
+			"cloud_provider": "AWS",
+			"category": "Observability",
+			"experimental": false,
+			"description": "Every VPC resource should have an associated Flow Log",
+			"description_id": "cdbdeb30",
+			"files": [
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "2de034c280a854a209d121078586c137975b6830bcdf85fd9ffd6d00d8e20889",
+					"line": 1,
+					"resource_type": "aws_vpc",
+					"resource_name": "main",
+					"issue_type": "IncorrectValue",
+					"search_key": "aws_vpc[main]",
+					"search_line": 1,
+					"search_value": "",
+					"expected_value": "aws_vpc[main] should be the same as Flow Logs VPC id",
+					"actual_value": "aws_vpc[main] is not the same as Flow Logs VPC id"
+				}
+			]
+		},
+		{
+			"query_name": "VPC Without Network Firewall",
+			"query_id": "fd632aaf-b8a1-424d-a4d1-0de22fd3247a",
+			"query_url": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/networkfirewall_firewall#vpc_id",
+			"severity": "MEDIUM",
+			"platform": "Terraform",
+			"cwe": "311",
+			"cloud_provider": "AWS",
+			"category": "Networking and Firewall",
+			"experimental": false,
+			"description": "VPC should have a Network Firewall associated",
+			"description_id": "2e7d55e6",
+			"files": [
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "c81239ce22eae4fb042abb428c12a99056f4b96cbbe1af91154325d3890128fc",
+					"line": 1,
+					"resource_type": "aws_vpc",
+					"resource_name": "main",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_vpc[main]",
+					"search_line": 1,
+					"search_value": "",
+					"expected_value": "aws_vpc[main] has an 'aws_networkfirewall_firewall' associated",
+					"actual_value": "aws_vpc[main] does not have an 'aws_networkfirewall_firewall' associated"
+				}
+			]
+		},
+		{
+			"query_name": "IAM Access Analyzer Not Enabled",
+			"query_id": "e592a0c5-5bdb-414c-9066-5dba7cdea370",
+			"query_url": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/accessanalyzer_analyzer",
+			"severity": "LOW",
+			"platform": "Terraform",
+			"cwe": "710",
+			"cloud_provider": "AWS",
+			"category": "Best Practices",
+			"experimental": false,
+			"description": "IAM Access Analyzer should be enabled and configured to continuously monitor resource permissions",
+			"description_id": "d03e85ae",
+			"files": [
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "0a7d0464de505a54720d6002d14a22a32e6b20bb8189d444ab621d8ab838304f",
+					"line": 1,
+					"resource_type": "n/a",
+					"resource_name": "n/a",
+					"issue_type": "MissingAttribute",
+					"search_key": "resource",
+					"search_line": -1,
+					"search_value": "",
+					"expected_value": "'aws_accessanalyzer_analyzer' should be set",
+					"actual_value": "'aws_accessanalyzer_analyzer' is undefined"
+				}
+			]
+		},
+		{
+			"query_name": "Instance With No VPC",
+			"query_id": "a31a5a29-718a-4ff4-8001-a69e5e4d029e",
+			"query_url": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance",
+			"severity": "LOW",
+			"platform": "Terraform",
+			"cwe": "284",
+			"cloud_provider": "AWS",
+			"category": "Insecure Configurations",
+			"experimental": false,
+			"description": "EC2 Instances should be configured under a VPC network. AWS VPCs provide the controls to facilitate a formal process for approving and testing all network connections and changes to the firewall and router configurations.",
+			"description_id": "225a9f30",
+			"files": [
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "33b9c5c7d9d375550c9cc26f1bd848533d387ec0a9377b786251cf5df13fae10",
+					"line": 70,
+					"resource_type": "aws_instance",
+					"resource_name": "TestInstance",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_instance[this]",
+					"search_line": 70,
+					"search_value": "",
+					"expected_value": "Attribute 'vpc_security_group_ids' should be defined and not null",
+					"actual_value": "Attribute 'vpc_security_group_ids' is undefined or null"
+				}
+			]
+		},
+		{
+			"query_name": "EC2 Not EBS Optimized",
+			"query_id": "60224630-175a-472a-9e23-133827040766",
+			"query_url": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance#ebs_optimized",
+			"severity": "INFO",
+			"platform": "Terraform",
+			"cwe": "710",
+			"cloud_provider": "AWS",
+			"category": "Best Practices",
+			"experimental": false,
+			"description": "It's considered a best practice for an EC2 instance to use an EBS optimized instance. This provides the best performance for your EBS volumes by minimizing contention between Amazon EBS I/O and other traffic from your instance",
+			"description_id": "ddce4bd9",
+			"files": [
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "462d94a4f83999d7bc1963c33882979041d36aa1bd050ff9409d7a5528ee0546",
+					"line": 70,
+					"resource_type": "aws_instance",
+					"resource_name": "TestInstance",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_instance[{{this}}]",
+					"search_line": 70,
+					"search_value": "",
+					"expected_value": "'ebs_optimized' should be set to true",
+					"actual_value": "'ebs_optimized' is undefined or null",
+					"remediation": "ebs_optimized = true",
+					"remediation_type": "addition"
+				}
+			]
+		},
+		{
+			"query_name": "Resource Not Using Tags",
+			"query_id": "e38a8e0a-b88b-4902-b3fe-b0fcb17d5c10",
+			"query_url": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/resource-tagging",
+			"severity": "INFO",
+			"platform": "Terraform",
+			"cwe": "665",
+			"cloud_provider": "AWS",
+			"category": "Best Practices",
+			"experimental": false,
+			"description": "AWS services resource tags are an essential part of managing components. As a best practice, the field 'tags' should have additional tags defined other than 'Name'",
+			"description_id": "09db2d52",
+			"files": [
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "0138b9fdd510c1730e7efedea78ea296ffa064e4113e6179707e78a7bc6f742e",
+					"line": 41,
+					"resource_type": "aws_security_group",
+					"resource_name": "sg",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_security_group[{{sg}}]",
+					"search_line": -1,
+					"search_value": "",
+					"expected_value": "aws_security_group[{{sg}}].tags should be defined and not null",
+					"actual_value": "aws_security_group[{{sg}}].tags is undefined or null"
+				},
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "65ab974d106aadeaa686cfc8d95178784f05819dca4625c2d2c0cb1d278ef970",
+					"line": 16,
+					"resource_type": "aws_subnet",
+					"resource_name": "${each.key}",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_subnet[{{subnets}}].tags",
+					"search_line": -1,
+					"search_value": "",
+					"expected_value": "aws_subnet[{{subnets}}].tags has additional tags defined other than 'Name'",
+					"actual_value": "aws_subnet[{{subnets}}].tags does not have additional tags defined other than 'Name'"
+				},
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "6740225b41b4c771bee8e0f18a199e45ce64991f176c3a1bbb4c47b54f2bda83",
+					"line": 82,
+					"resource_type": "aws_instance",
+					"resource_name": "TestInstance",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_instance[{{this}}].tags",
+					"search_line": -1,
+					"search_value": "",
+					"expected_value": "aws_instance[{{this}}].tags has additional tags defined other than 'Name'",
+					"actual_value": "aws_instance[{{this}}].tags does not have additional tags defined other than 'Name'"
+				},
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "13c9ca6f8ce6c76a42a7b88ef2a5d368eb3bddd2a76d4a4d93287a465b1e6114",
+					"line": 21,
+					"resource_type": "aws_internet_gateway",
+					"resource_name": "igw",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_internet_gateway[{{igw}}]",
+					"search_line": -1,
+					"search_value": "",
+					"expected_value": "aws_internet_gateway[{{igw}}].tags should be defined and not null",
+					"actual_value": "aws_internet_gateway[{{igw}}].tags is undefined or null"
+				},
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "640978002c3199330d21777db689293b3c4b183f9cc1ba215223606f751df4b7",
+					"line": 25,
+					"resource_type": "aws_route_table",
+					"resource_name": "rt",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_route_table[{{rt}}]",
+					"search_line": -1,
+					"search_value": "",
+					"expected_value": "aws_route_table[{{rt}}].tags should be defined and not null",
+					"actual_value": "aws_route_table[{{rt}}].tags is undefined or null"
+				},
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "cb703e2a7923a25e649280b1f7c0ab1db48c3b9164fcc966a2bcc0f1f9f01fa3",
+					"line": 6,
+					"resource_type": "aws_vpc",
+					"resource_name": "CustomVpc",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_vpc[{{main}}].tags",
+					"search_line": -1,
+					"search_value": "",
+					"expected_value": "aws_vpc[{{main}}].tags has additional tags defined other than 'Name'",
+					"actual_value": "aws_vpc[{{main}}].tags does not have additional tags defined other than 'Name'"
+				}
+			]
+		},
+		{
+			"query_name": "Security Group Not Used",
+			"query_id": "4849211b-ac39-479e-ae78-5694d506cb24",
+			"query_url": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group",
+			"severity": "INFO",
+			"platform": "Terraform",
+			"cwe": "284",
+			"cloud_provider": "AWS",
+			"category": "Access Control",
+			"experimental": false,
+			"description": "Security group must be used or not declared",
+			"description_id": "eff2383a",
+			"files": [
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "9cc1ebcf1ed813c54a8de750b3af0aa02e308c6b0992cd9913d417b0b3b4bedf",
+					"line": 41,
+					"resource_type": "aws_security_group",
+					"resource_name": "sg",
+					"issue_type": "IncorrectValue",
+					"search_key": "aws_security_group[sg]",
+					"search_line": -1,
+					"search_value": "",
+					"expected_value": "'aws_security_group[sg]' should be used",
+					"actual_value": "'aws_security_group[sg]' is not used"
+				}
+			]
+		},
+		{
+			"query_name": "Security Group Rule Without Description",
+			"query_id": "cb3f5ed6-0d18-40de-a93d-b3538db31e8c",
+			"query_url": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group#description",
+			"severity": "INFO",
+			"platform": "Terraform",
+			"cwe": "710",
+			"cloud_provider": "AWS",
+			"category": "Best Practices",
+			"experimental": false,
+			"description": "It's considered a best practice for AWS Security Group to have a description",
+			"description_id": "bc535d27",
+			"files": [
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "887152a2f38f49a4aed92ccd4342e02b848213d80ac68e26fa87af4f1873a578",
+					"line": 41,
+					"resource_type": "aws_security_group",
+					"resource_name": "sg",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_security_group[{{sg}}]",
+					"search_line": -1,
+					"search_value": "",
+					"expected_value": "aws_security_group[{{sg}}] description should be defined and not null",
+					"actual_value": "aws_security_group[{{sg}}] description is undefined or null"
+				}
+			]
+		},
+		{
+			"query_name": "Security Group Rule Without Description",
+			"query_id": "68eb4bf3-f9bf-463d-b5cf-e029bb446d2e",
+			"query_url": "https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group#description",
+			"severity": "INFO",
+			"platform": "Terraform",
+			"cwe": "710",
+			"cloud_provider": "AWS",
+			"category": "Best Practices",
+			"experimental": false,
+			"description": "It's considered a best practice for all rules in AWS Security Group to have a description",
+			"description_id": "cee242dd",
+			"files": [
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "94bc8d18c367b45c5e8a0bfd862fde406be7b48fc14a87c580f64581955ca026",
+					"line": 51,
+					"resource_type": "aws_security_group",
+					"resource_name": "sg",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_security_group[{{sg}}].egress",
+					"search_line": 51,
+					"search_value": "",
+					"expected_value": "aws_security_group[{{sg}}].egress description should be defined and not null",
+					"actual_value": "aws_security_group[{{sg}}].egress description is undefined or null"
+				},
+				{
+					"file_name": "../../path/main.tf",
+					"similarity_id": "5260b8fdac825feebf4eaeca773dfde6a667ba24dfc6e024f88a1bf866758607",
+					"line": 44,
+					"resource_type": "aws_security_group",
+					"resource_name": "sg",
+					"issue_type": "MissingAttribute",
+					"search_key": "aws_security_group[{{sg}}].ingress",
+					"search_line": 44,
+					"search_value": "",
+					"expected_value": "aws_security_group[{{sg}}].ingress description should be defined and not null",
+					"actual_value": "aws_security_group[{{sg}}].ingress description is undefined or null"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,138 @@
+main.tf (terraformplan-snapshot)
+
+Tests: 6 (SUCCESSES: 0, FAILURES: 6, EXCEPTIONS: 0)
+Failures: 6 (UNKNOWN: 0, LOW: 3, MEDIUM: 1, HIGH: 1, CRITICAL: 1)
+
+LOW: Security group explicitly uses the default description.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Security groups should include a description for auditing purposes.
+
+Simplifies auditing, debugging, and managing security groups.
+
+
+See https://avd.aquasec.com/misconfig/avd-aws-0099
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ main.tf:41-57
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  41 ┌ resource "aws_security_group" "sg" {
+  42 │   vpc_id = aws_vpc.main.id
+  43 │ 
+  44 │   ingress {
+  45 │     from_port   = 22
+  46 │     to_port     = 22
+  47 │     protocol    = "tcp"
+  48 │     cidr_blocks = ["${var.override_ip_address}/32"]
+  49 └   }
+  ..   
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+CRITICAL: Security group rule allows egress to multiple public internet addresses.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Opening up ports to connect out to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that are explicitly required where possible.
+
+
+See https://avd.aquasec.com/misconfig/avd-aws-0104
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ main.tf:55
+   via main.tf:51-56 (egress)
+    via main.tf:41-57 (aws_security_group.sg)
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  41   resource "aws_security_group" "sg" {
+  ..   
+  55 [     cidr_blocks = ["0.0.0.0/0"]
+  ..   
+  57   }
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+LOW: Security group rule does not have a description.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Security group rules should include a description for auditing purposes.
+
+Simplifies auditing, debugging, and managing security groups.
+
+
+See https://avd.aquasec.com/misconfig/avd-aws-0124
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ main.tf:51-56
+   via main.tf:41-57 (aws_security_group.sg)
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  41   resource "aws_security_group" "sg" {
+  ..   
+  51 ┌   egress {
+  52 │     from_port   = 0
+  53 │     to_port     = 0
+  54 │     protocol    = "-1"
+  55 │     cidr_blocks = ["0.0.0.0/0"]
+  56 └   }
+  57   }
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+LOW: Security group rule does not have a description.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Security group rules should include a description for auditing purposes.
+
+Simplifies auditing, debugging, and managing security groups.
+
+
+See https://avd.aquasec.com/misconfig/avd-aws-0124
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ main.tf:44-49
+   via main.tf:41-57 (aws_security_group.sg)
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  41   resource "aws_security_group" "sg" {
+  ..   
+  44 ┌   ingress {
+  45 │     from_port   = 22
+  46 │     to_port     = 22
+  47 │     protocol    = "tcp"
+  48 │     cidr_blocks = ["${var.override_ip_address}/32"]
+  49 └   }
+  ..   
+  57   }
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+HIGH: Root block device is not encrypted.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+Block devices should be encrypted to ensure sensitive data is held securely at rest.
+
+
+See https://avd.aquasec.com/misconfig/avd-aws-0131
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ main.tf:70-85
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  70 ┌ resource "aws_instance" "this" {
+  71 │   ami           = data.aws_ami.amazon_linux.id
+  72 │   instance_type = "t2.micro"
+  73 │   private_ip    = var.ec2_private_ip
+  74 │   subnet_id     = aws_subnet.subnets["subnet1"].id
+  75 │ 
+  76 │   metadata_options {
+  77 │     http_tokens = "required" # fix imdsv2
+  78 └   }
+  ..   
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+MEDIUM: VPC does not have VPC Flow Logs enabled.
+══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+VPC Flow Logs provide visibility into network traffic that traverses the VPC and can be used to detect anomalous traffic or insight during security workflows.
+
+
+See https://avd.aquasec.com/misconfig/avd-aws-0178
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ main.tf:1-9
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 ┌ resource "aws_vpc" "main" {
+   2 │   cidr_block           = var.vpc_cidr_block
+   3 │   instance_tenancy     = "default"
+   4 │   enable_dns_support   = true
+   5 │   enable_dns_hostnames = true
+   6 │   tags = {
+   7 │     Name = "CustomVpc"
+   8 │   }
+   9 └ }
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

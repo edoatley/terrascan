@@ -1,0 +1,181 @@
+======================================================
+tfsec is joining the Trivy family
+
+tfsec will continue to remain available 
+for the time being, although our engineering 
+attention will be directed at Trivy going forward.
+
+You can read more here: 
+https://github.com/aquasecurity/tfsec/discussions/1994
+======================================================
+
+Result #1 CRITICAL Security group rule allows egress to multiple public internet addresses. 
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  main.tf:55
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   41    resource "aws_security_group" "sg" {
+   ..  
+   55  [     cidr_blocks = ["0.0.0.0/0"]
+   ..  
+   57    }
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+          ID aws-ec2-no-public-egress-sgr
+      Impact Your port is egressing data to the internet
+  Resolution Set a more restrictive cidr range
+
+  More Information
+  - https://aquasecurity.github.io/tfsec/v1.28.10/checks/aws/ec2/no-public-egress-sgr/
+  - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+Result #2 HIGH Root block device is not encrypted. 
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  main.tf:70-85
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   70  ┌ resource "aws_instance" "this" {
+   71  │   ami           = data.aws_ami.amazon_linux.id
+   72  │   instance_type = "t2.micro"
+   73  │   private_ip    = var.ec2_private_ip
+   74  │   subnet_id     = aws_subnet.subnets["subnet1"].id
+   75  │ 
+   76  │   metadata_options {
+   77  │     http_tokens = "required" # fix imdsv2
+   78  └   }
+   ..  
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+          ID aws-ec2-enable-at-rest-encryption
+      Impact The block device could be compromised and read from
+  Resolution Turn on encryption for all block devices
+
+  More Information
+  - https://aquasecurity.github.io/tfsec/v1.28.10/checks/aws/ec2/enable-at-rest-encryption/
+  - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance#ebs-ephemeral-and-root-block-devices
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+Result #3 MEDIUM VPC Flow Logs is not enabled for VPC  
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  main.tf:1-9
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    1    resource "aws_vpc" "main" {
+    2      cidr_block           = var.vpc_cidr_block
+    3      instance_tenancy     = "default"
+    4      enable_dns_support   = true
+    5      enable_dns_hostnames = true
+    6      tags = {
+    7        Name = "CustomVpc"
+    8      }
+    9    }
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+          ID aws-ec2-require-vpc-flow-logs-for-all-vpcs
+      Impact Without VPC flow logs, you risk not having enough information about network traffic flow to investigate incidents or identify security issues.
+  Resolution Enable flow logs for VPC
+
+  More Information
+  - https://aquasecurity.github.io/tfsec/v1.28.10/checks/aws/ec2/require-vpc-flow-logs-for-all-vpcs/
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+Result #4 LOW Security group explicitly uses the default description. 
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  main.tf:41-57
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   41  ┌ resource "aws_security_group" "sg" {
+   42  │   vpc_id = aws_vpc.main.id
+   43  │ 
+   44  │   ingress {
+   45  │     from_port   = 22
+   46  │     to_port     = 22
+   47  │     protocol    = "tcp"
+   48  │     cidr_blocks = ["${var.override_ip_address}/32"]
+   49  └   }
+   ..  
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+          ID aws-ec2-add-description-to-security-group
+      Impact Descriptions provide context for the firewall rule reasons
+  Resolution Add descriptions for all security groups
+
+  More Information
+  - https://aquasecurity.github.io/tfsec/v1.28.10/checks/aws/ec2/add-description-to-security-group/
+  - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+  - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+Result #5 LOW Security group rule does not have a description. 
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  main.tf:44-49
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   41    resource "aws_security_group" "sg" {
+   ..  
+   44  ┌   ingress {
+   45  │     from_port   = 22
+   46  │     to_port     = 22
+   47  │     protocol    = "tcp"
+   48  │     cidr_blocks = ["${var.override_ip_address}/32"]
+   49  └   }
+   ..  
+   57    }
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+          ID aws-ec2-add-description-to-security-group-rule
+      Impact Descriptions provide context for the firewall rule reasons
+  Resolution Add descriptions for all security groups rules
+
+  More Information
+  - https://aquasecurity.github.io/tfsec/v1.28.10/checks/aws/ec2/add-description-to-security-group-rule/
+  - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+  - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+Result #6 LOW Security group rule does not have a description. 
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  main.tf:51-56
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   41    resource "aws_security_group" "sg" {
+   ..  
+   51  ┌   egress {
+   52  │     from_port   = 0
+   53  │     to_port     = 0
+   54  │     protocol    = "-1"
+   55  │     cidr_blocks = ["0.0.0.0/0"]
+   56  └   }
+   57    }
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+          ID aws-ec2-add-description-to-security-group-rule
+      Impact Descriptions provide context for the firewall rule reasons
+  Resolution Add descriptions for all security groups rules
+
+  More Information
+  - https://aquasecurity.github.io/tfsec/v1.28.10/checks/aws/ec2/add-description-to-security-group-rule/
+  - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+  - https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  timings
+  ──────────────────────────────────────────
+  disk i/o             1.965993ms
+  parsing              1.69269ms
+  adaptation           204.993µs
+  checks               7.679662ms
+  total                11.543338ms
+
+  counts
+  ──────────────────────────────────────────
+  modules downloaded   0
+  modules processed    1
+  blocks processed     14
+  files read           4
+
+  results
+  ──────────────────────────────────────────
+  passed               6
+  ignored              0
+  critical             1
+  high                 1
+  medium               1
+  low                  3
+
+  6 passed, 6 potential problem(s) detected.
