@@ -6,6 +6,7 @@
     - [Initial thoughts](#initial-thoughts)
   - [tfsec / trivy](#tfsec--trivy)
     - [Usage](#usage-1)
+    - [VS Code Extension](#vs-code-extension)
     - [Initial thoughts](#initial-thoughts-1)
   - [Checkov](#checkov)
     - [Usage](#usage-2)
@@ -94,6 +95,19 @@ scan with `trivy`:
 docker run --rm -it -v "$(pwd)/terraform:/terraform" aquasec/trivy config /terraform
 ```
 This produced an identical (I believe) set of results I saved [here](./resources/trivy-results.txt)
+
+### VS Code Extension
+
+Unlike some of the other scanning tools I managed to get `tfsec` to work as a VS Code Extension which runs `tfsec` and 
+makes it prominent in the code editor:
+
+![tfsec-plugin-example](images/tfsec-plugin-example.png)
+
+Note: I did need to install tfsec using homebrew and ensure it was on my `PATH` - it does seem worth it though giving you a nice breakdown that you can click through to:
+
+![tfsec-plugin-summary](images/tfsec-plugin-summary.png)
+
+
 
 ### Initial thoughts
 
